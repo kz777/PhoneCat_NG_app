@@ -4,8 +4,17 @@
 
 describe('PhoneCat controllers', function() {
 
+    beforeEach(function(){
+      this.addMatchers({
+        toEqualData: function(expected) {
+          return angular.equals(this.actual, expected);
+        }
+      });
+    });
+
     // Load our app module definition before each test.
     beforeEach(module('phonecatApp'));
+    beforeEach(module('phonecatServices'));
 
     describe('PhoneListCtrl', function() {
         var scope, ctrl, $httpBackend;
@@ -31,15 +40,13 @@ describe('PhoneCat controllers', function() {
         }));
 
         it('should create "phones" model with 2 phones fetched from xhr', function() {
-            expect(scope.phones).toBeUndefined();
+            expect(scope.phones).toEqualData([]);
             $httpBackend.flush();
 
-            expect(scope.phones).toEqual([{
-                name: 'Nexus S'
-            }, {
-                name: 'Motorola DROID'
-            }]);
+            expect(scope.phones).toEqualData(
+                [{name: 'Nexus S'}, {name: 'Motorola DROID'}]);
         });
+
 
 
         it('should set the default value of orderProp model', function() {
@@ -67,10 +74,10 @@ describe('PhoneCat controllers', function() {
 
 
     it('should fetch phone detail', function() {
-      expect(scope.phone).toBeUndefined();
+      expect(scope.phone).toEqualData({});
       $httpBackend.flush();
 
-      expect(scope.phone).toEqual( xyzPhoneData() );
+      expect(scope.phone).toEqualData( xyzPhoneData() );
     });
   });
 });
